@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criptografar Mensagem</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Criptografar Mensagem</h1>
+        <textarea id="message" placeholder="Digite sua mensagem aqui"></textarea>
+        <button id="encryptBtn">Criptografar</button>
+        <p>Mensagem Criptografada:</p>
+        <p id="encryptedMessage"></p>
+    </div>
+
+    <script src="src/crypto.js"></script>
+    <script>
+        let publicKey;
+
+        async function encryptAndDisplay() {
+            const message = document.getElementById("message").value;
+
+            if (!publicKey) {
+                const keyPair = await generateKeyPair();
+                publicKey = keyPair.publicKey;
+                localStorage.setItem("privateKey", JSON.stringify(await window.crypto.subtle.exportKey("jwk", keyPair.privateKey)));
+            }
+
+            const encryptedMessage = await encryptMessage(publicKey, message);
+            document.getElementById("encryptedMessage").innerText = arrayBufferToBase64(encryptedMessage);
+        }
+
+        document.getElementById("encryptBtn").addEventListener("click", encryptAndDisplay);
+    </script>
+</body>
+</html>

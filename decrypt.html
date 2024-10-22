@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descriptografar Mensagem</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Descriptografar Mensagem</h1>
+        <textarea id="encryptedMessage" placeholder="Coloque o texto criptografado"></textarea>
+        <button id="decryptBtn">Descriptografar</button>
+        <p>Mensagem Original:</p>
+        <p id="originalMessage"></p>
+    </div>
+
+    <script src="src/crypto.js"></script>
+    <script>
+        async function decryptAndDisplay() {
+            const encryptedMessage = document.getElementById("encryptedMessage").value;
+            const privateKeyJWK = JSON.parse(localStorage.getItem("privateKey"));
+            const privateKey = await window.crypto.subtle.importKey("jwk", privateKeyJWK, {
+                name: "RSA-OAEP",
+                hash: "SHA-256",
+            }, true, ["decrypt"]);
+
+            const decryptedMessage = await decryptMessage(privateKey, base64ToArrayBuffer(encryptedMessage));
+            document.getElementById("originalMessage").innerText = decryptedMessage;
+        }
+
+        document.getElementById("decryptBtn").addEventListener("click", decryptAndDisplay);
+    </script>
+</body>
+</html>
