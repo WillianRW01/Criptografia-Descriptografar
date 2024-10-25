@@ -1,78 +1,76 @@
-// Função para gerar um par de chaves (pública e privada)
-async function gerarChaves() {
+// Função para gerar um par de chaves assimétricas (pública e privada)
+async function generateKeyPair() {
     try {
-        const chaves = await window.crypto.subtle.generateKey(
+        return await window.crypto.subtle.generateKey(
             {
                 name: "RSA-OAEP",
-                modulusLength: 2048, // Tamanho da chave
-                publicExponent: new Uint8Array([1, 0, 1]), // Valor padrão recomendado
-                hash: "SHA-256" // Algoritmo de hash
+                modulusLength: 2048, // Tamanho da chave em bits
+                publicExponent: new Uint8Array([1, 0, 1]), // Valor fixo recomendado para RSA
+                hash: "SHA-256", // Algoritmo de hash para OAEP
             },
-            true, // As chaves podem ser exportadas
-            ["encrypt", "decrypt"] // Permissões: criptografar e descriptografar
+            true, // As chaves são exportáveis
+            ["encrypt", "decrypt"] // Permissões de uso (criptografar e descriptografar)
         );
-        return chaves;
-    } catch (erro) {
-        console.error("Erro ao gerar as chaves:", erro);
-        throw new Error("Não foi possível gerar o par de chaves.");
+    } catch (error) {
+        console.error("Erro ao gerar o par de chaves:", error);
+        throw new Error("Falha ao gerar o par de chaves.");
     }
 }
 
-// Função para criptografar uma mensagem usando a chave pública
-async function criptografarMensagem(chavePublica, mensagem) {
+// Função para criptografar uma mensagem com a chave pública
+async function encryptMessage(publicKey, message) {
     try {
         const encoder = new TextEncoder();
-        const mensagemCodificada = encoder.encode(mensagem);
-        const mensagemCriptografada = await window.crypto.subtle.encrypt(
-            { name: "RSA-OAEP" }, // Algoritmo de criptografia
-            chavePublica, // Chave pública
-            mensagemCodificada // Mensagem em formato Uint8Array
+        const encodedMessage = encoder.encode(message); // Codifica a mensagem como Uint8Array
+        return await window.crypto.subtle.encrypt(
+            { name: "RSA-OAEP" }, // Algoritmo usado
+            publicKey, // Chave pública
+            encodedMessage // Mensagem codificada
         );
-        return mensagemCriptografada;
-    } catch (erro) {
-        console.error("Erro ao criptografar a mensagem:", erro);
-        throw new Error("Falha na criptografia da mensagem.");
+    } catch (error) {
+        console.error("Erro ao criptografar a mensagem:", error);
+        throw new Error("Falha ao criptografar a mensagem.");
     }
 }
 
 // Função para descriptografar uma mensagem com a chave privada
-async function descriptografarMensagem(chavePrivada, mensagemCriptografada) {
+async function decryptMessage(privateKey, encryptedMessage) {
     try {
-        const mensagemDecodificada = await window.crypto.subtle.decrypt(
-            { name: "RSA-OAEP" }, // Algoritmo de descriptografia
-            chavePrivada, // Chave privada
-            mensagemCriptografada // Mensagem criptografada
+        const decryptedMessage = await window.crypto.subtle.decrypt(
+            { name: "RSA-OAEP" }, // Algoritmo usado
+            privateKey, // Chave privada
+            encryptedMessage // Mensagem criptografada
         );
         const decoder = new TextDecoder();
-        return decoder.decode(mensagemDecodificada); // Converte de volta para texto
-    } catch (erro) {
-        console.error("Erro ao descriptografar a mensagem:", erro);
-        throw new Error("Falha na descriptografia da mensagem.");
+        return decoder.decode(decryptedMessage); // Decodifica de volta para texto
+    } catch (error) {
+        console.error("Erro ao descriptografar a mensagem:", error);
+        throw new Error("Falha ao descriptografar a mensagem.");
     }
 }
 
-// Função para converter ArrayBuffer para Base64 (fácil de manipular)
-function arrayBufferParaBase64(buffer) {
+// Função auxiliar para converter ArrayBuffer para base64
+function arrayBufferToBase64(buffer) {
     try {
-        const binario = String.fromCharCode(...new Uint8Array(buffer));
-        return window.btoa(binario); // Codifica para Base64
-    } catch (erro) {
-        console.error("Erro ao converter ArrayBuffer para Base64:", erro);
-        throw new Error("Conversão para Base64 falhou.");
+        const binary = String.fromCharCode(...new Uint8Array(buffer)); // Converte para string binária
+        return window.btoa(binary); // Codifica para base64
+    } catch (error) {
+        console.error("Erro ao converter ArrayBuffer para base64:", error);
+        throw new Error("Falha na conversão para base64.");
     }
 }
 
-// Função para converter Base64 de volta para ArrayBuffer
-function base64ParaArrayBuffer(base64) {
+// Função auxiliar para converter base64 de volta para ArrayBuffer
+function base64ToArrayBuffer(base64) {
     try {
-        const binario = window.atob(base64); // Decodifica Base64
-        const buffer = new Uint8Array(binario.length);
-        for (let i = 0; i < binario.length; i++) {
-            buffer[i] = binario.charCodeAt(i); // Preenche o buffer com os caracteres
+        const binary = window.atob(base64); // Decodifica base64
+        const buffer = new Uint8Array(binary.length); // Cria novo ArrayBuffer
+        for (let i = 0; i < binary.length; i++) {
+            buffer[i] = binary.charCodeAt(i); // Preenche o buffer
         }
         return buffer;
-    } catch (erro) {
-        console.error("Erro ao converter Base64 para ArrayBuffer:", erro);
-        throw new Error("Conversão de Base64 falhou.");
+    } catch (error) {
+        console.error("Erro ao converter base64 para ArrayBuffer:", error);
+        throw new Error("Falha na conversão de base64.");
     }
 }
