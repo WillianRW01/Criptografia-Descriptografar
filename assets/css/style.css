@@ -1,71 +1,77 @@
-/* Estilos globais */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    background-color: #f0f0f5;
+    color: #333;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-}
-
-/* Container principal */
-.container {
-    background-color: white;
+    margin: 0;
     padding: 20px;
+}
+
+.container {
+    width: 90%;
+    max-width: 600px;
+    background: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 500px;
-    width: 100%;
-}
-
-h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-/* Botões e links */
-button, .nav-links a {
-    font-size: 18px;
-    text-decoration: none;
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: inline-block;
-    margin-top: 10px;
-}
-
-button:hover, .nav-links a:hover {
-    background-color: #0056b3;
-}
-
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    font-size: 16px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: none;
-}
-
-p {
-    margin: 15px 0;
-}
-
-/* Links da página inicial */
-.nav-links {
+    padding: 20px;
     margin-top: 20px;
 }
 
-.nav-links a {
-    display: block;
-    margin: 10px 0;
+h1, h2 {
+    color: #4a90e2;
     text-align: center;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+textarea, input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+    font-size: 1rem;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4a90e2;
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #357ABD;
+}
+
+.key-display {
+    background-color: #e0e0e0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: #333;
+    margin-top: 10px;
+    word-break: break-all;
+}
+
+.result-display {
+    background-color: #fafafa;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-top: 10px;
+    word-break: break-all;
 }
